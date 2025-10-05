@@ -9,6 +9,7 @@ import TodoListPage from "./pages/todolist/to-do-list-page";
 import Button from "./components/button/Button";
 import { useReducer, useState, useSyncExternalStore } from "react";
 import { useImmer } from "use-immer";
+import AddTodoPage from "./pages/todolist/add-to-do-page";
 
 function getTextData() {
   return [
@@ -93,6 +94,7 @@ function App() {
     <>
       <Header />
       <TodoListPage />
+      <AddTodoPage />
       <Gallery>
         <Title text="Текстовые заметки" level={2} color="green" />
         {textGalleryItems}
