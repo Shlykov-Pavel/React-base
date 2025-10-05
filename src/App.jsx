@@ -7,7 +7,7 @@ import TextGalleryItem from "./components/container/TextGalleryItem";
 import Gallery from "./components/container/Gallery";
 import TodoListPage from "./pages/todolist/to-do-list-page";
 import Button from "./components/button/Button";
-import { useState, useSyncExternalStore } from "react";
+import { useReducer, useState, useSyncExternalStore } from "react";
 import { useImmer } from "use-immer";
 
 function getTextData() {
@@ -33,21 +33,48 @@ let nextImageId = 4
 
 function App() {
 
-  const [textData, setTextData] = useState(getTextData);
+  // const [textData, setTextData] = useState(getTextData);
+  const [textData, dispatch] = useReducer(changeTextData, null, getTextData)
   const [imageData, setImageData] = useImmer(getImageData)
 
-  const textGalleryItems = textData.map(data => <TextGalleryItem key={data.id} text={data.text} />);
+  const textGalleryItems = textData.map(data => <TextGalleryItem key={data.id} text={data.text} onDelete={() => handleDeleteTextNote(data.id)} />);
   const imageGalleryItems = imageData.map(data => <ImgGalleryItem key={data.id} caption={data.text} src={data.src} />);
 
+  function changeTextData (notes, action){
+    switch(action.type){
+        case "add":
+          return [
+            ...notes,
+            action.note
+          ]
+          case "delete":
+            return notes.filter(note => note.id !== action.noteId)
+        }
+  }
+
   function handleAddTextNote () {
-   setTextData([
-    ...textData,
-    {
-      id: ++nextTextId,
-      text: `Text #${nextTextId}`
-    }
-    ]
-   )
+    dispatch ({
+      type: "add",
+      note: {
+        id:++nextTextId,
+        text: `Text #${nextTextId}`
+      }
+    })
+  //  setTextData([
+  //   ...textData,
+  //   {
+  //     id: ++nextTextId,
+  //     text: `Text #${nextTextId}`
+  //   }
+  //   ]
+  //  )
+  }
+
+  function handleDeleteTextNote(noteId) {
+    dispatch ({
+      type: "delete",
+      noteId: noteId
+    })
   }
 
   function handleAddImageNote() {

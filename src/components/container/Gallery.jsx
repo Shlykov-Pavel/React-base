@@ -1,3 +1,4 @@
+import { PageSettings } from "../../../pageSettings";
 import { useSlot } from "../../hooks/hooks";
 import Title from "../text/Title";
 import ImgGalleryItem from "./ImgGalleryItem";
@@ -5,7 +6,7 @@ import TextGalleryItem from "./TextGalleryItem";
 import container from "./container.module.css"
 
 
-export default function Gallery ({children, view = 'horizontal'}) {
+export default function Gallery ({children, view = 'horizontal', hColor}) {
 
     const title=useSlot(children,[Title]);
     const galleryItem = useSlot(children, [ImgGalleryItem, TextGalleryItem]);
@@ -17,8 +18,9 @@ export default function Gallery ({children, view = 'horizontal'}) {
                         {title}
                     </div>
         <div className={container[view]}>
+<PageSettings.Provider value={{hColor}}>
             {galleryItem}
-
+</PageSettings.Provider>
         </div>
         </div>
     </section>
