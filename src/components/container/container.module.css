@@ -1,42 +1,59 @@
 .vertical {
     display: flex;
     flex-direction: column;
+    overflow-x: scroll;
 }
 
 .horizontal {
     display: flex;
     flex-direction: row;
+    overflow-x: scroll;
 }
 
-.galleryContainer {
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    border-radius: 16px;
-    padding: 24px;
-    margin: 20px auto;
-    max-width: 1200px;
-    box-shadow: 
-        0 8px 32px rgba(0, 0, 0, 0.1),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    backdrop-filter: blur(10px);
+.gallery {
+    margin-top: 30px;
+    margin-bottom: 30px;
 }
 
-.galleryHeader {
+.header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.textBlock {
+    display: flex;
+    flex-direction: column;
     text-align: center;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid black;
+    border-radius: 3px;
+    padding: 10px;
+    flex: 1;
+    background-color: whitesmoke;
 }
 
+.textBlock>span {
+    margin-bottom: 20px;
+}
 
-.galleryHeader::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60px;
-    height: 3px;
-    background: linear-gradient(90deg, transparent, #ffffff, transparent);
-    border-radius: 2px;
+.imageBlock {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    border: 1px solid darkblue;
+    border-radius: 3px;
+    padding: 10px;
+    flex: 1;
+    margin: 0;
+    background-color: whitesmoke;
+}
+
+.imageBlock>figcaption {
+    margin-bottom: 20px;
+}
+
+.imageBlock>img {
+    height: 150px;
+    width: auto;
 }

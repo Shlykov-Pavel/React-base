@@ -1,0 +1,15 @@
+.todolist {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.todo {
+    text-align: center;
+    border: 1px solid black;
+    border-radius: 3px;
+    padding-bottom: 20px;
+}
+
+.status {
+    padding: 10px 20px;
+}
