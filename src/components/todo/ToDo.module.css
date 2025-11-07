@@ -22,6 +22,24 @@
     transition: all 0.2s ease;
 }
 
+/* Завершенные задачи - зеленый */
+.todoItemDone {
+    background-color: #b3f5c7;
+    border-color: #4caf50;
+}
+
+/* Просроченные задачи - красный/оранжевый */
+.todoItemOverdue {
+    background-color: #ffe0e0;
+    border-color: #f44336;
+}
+
+/* Обычные невыполненные задачи - синий/голубой */
+.todoItemPending {
+    background-color: #e3f2fd;
+    border-color: #2196f3;
+}
+
 .todoItem:hover {
     border-color: #667eea;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
@@ -55,6 +73,11 @@
 }
 
 .todoStatus.pending {
+    background-color: #bee3f8;
+    color: #2c5282;
+}
+
+.todoStatus.overdue {
     background-color: #fed7d7;
     color: #742a2a;
 }

@@ -1,15 +1,18 @@
-import Header from "./components/Header/Header";
-import { Footer } from "./components/Footer/Footer";
-import Todos from "./components/todo/ToDos";
+import Header from "./components/header/Header";
+import { Footer } from "./components/footer/Footer";
+import Gallary from "./components/container/Gallary";
 import Title from "./components/text/Title";
-import ImgGalleryItem from "./components/container/ImgGalleryItem";
-import TextGalleryItem from "./components/container/TextGalleryItem";
-import Gallery from "./components/container/Gallery";
-import TodoListPage from "./pages/todolist/to-do-list-page";
-import Button from "./components/button/Button";
-import { useReducer, useState, useSyncExternalStore } from "react";
-import { useImmer } from "use-immer";
-import AddTodoPage from "./pages/todolist/add-to-do-page";
+import TextGallaryItem from "./components/container/TextGallaryItem";
+import ImgGallaryItem from "./components/container/ImgGallaryItem";
+import TodoListPage from "./pages/todolist/todo-list-page";
+import { useState } from "react";
+import { useReducer } from "react";
+import { useImmer } from 'use-immer'
+import Button from "./components/button/button";
+import { PageSettings } from "./pageSettings";
+import { useContext } from "react";
+import AddTodoPage from "./pages/todolist/add-todo-page";
+import { Outlet } from "react-router-dom";
 
 function getTextData() {
   return [
@@ -29,84 +32,95 @@ function getImageData() {
   ];
 }
 
-let nextTextId = 4
-let nextImageId = 4
+let nextTextId = 4;
+let nextImageId = 4;
 
 function App() {
+  const defaultColor = useContext(PageSettings);
+  const [hColor, setHColor] = useState(defaultColor);
 
-  // const [textData, setTextData] = useState(getTextData);
-  const [textData, dispatch] = useReducer(changeTextData, null, getTextData)
-  const [imageData, setImageData] = useImmer(getImageData)
-
-  const textGalleryItems = textData.map(data => <TextGalleryItem key={data.id} text={data.text} onDelete={() => handleDeleteTextNote(data.id)} />);
-  const imageGalleryItems = imageData.map(data => <ImgGalleryItem key={data.id} caption={data.text} src={data.src} />);
-
-  function changeTextData (notes, action){
-    switch(action.type){
-        case "add":
-          return [
-            ...notes,
-            action.note
-          ]
-          case "delete":
-            return notes.filter(note => note.id !== action.noteId)
-        }
+  function handleChangeHColor(color) {
+    console.log(color)
+    setHColor(color);
   }
 
-  function handleAddTextNote () {
-    dispatch ({
-      type: "add",
-      note: {
-        id:++nextTextId,
-        text: `Text #${nextTextId}`
-      }
-    })
-  //  setTextData([
-  //   ...textData,
-  //   {
-  //     id: ++nextTextId,
-  //     text: `Text #${nextTextId}`
-  //   }
-  //   ]
-  //  )
+  const [textData, textDispatch] = useReducer(changeTextData, null, getTextData);
+  const [imageData, imageDispatch] = useReducer(changeImageData, null, getImageData);
+
+  const textGallaryItems = textData.map(data => <TextGallaryItem key={data.id}
+    onDelete={() => handleDeleteTextNote(data.id)} text={data.text} />);
+  const imageGallaryItems = imageData.map(data => <ImgGallaryItem key={data.id}
+    onDelete={() => handleDeleteImageNote(data.id)} caption={data.text} src={data.src} />);
+
+  // изменение изображений
+  function changeImageData(notes, action) {
+    switch (action.type) {
+      case "add":
+        return [
+          ...notes,
+          action.note
+        ]
+      case "delete":
+        return notes.filter(note => note.id !== action.noteId)
+    }
   }
 
-  function handleDeleteTextNote(noteId) {
-    dispatch ({
+  // обработчик удаления изображений
+  function handleDeleteImageNote(noteId) {
+    imageDispatch({
       type: "delete",
       noteId: noteId
-    })
+    });
   }
 
+  // обработчик добавления изображений
   function handleAddImageNote() {
-    setImageData(imageData => {
-      imageData.push({
+    imageDispatch({
+      type: "add",
+      note: {
         id: ++nextImageId,
         text: `Image #${nextImageId}`,
         src: "https://mock"
-      })
-    }
+      }
+    });
+  }
 
-    );
+  // изменение текстовых заметок
+  function changeTextData(notes, action) {
+    switch (action.type) {
+      case "add":
+        return [
+          ...notes,
+          action.note
+        ]
+      case "delete":
+        return notes.filter(note => note.id !== action.noteId)
+    }
+  }
+
+  // обработчик добавления текстовых заметок
+  function handleAddTextNote() {
+    textDispatch({
+      type: "add",
+      note: {
+        id: ++nextTextId,
+        text: `Text #${nextTextId}`
+      }
+    });
+  }
+
+  // обработчик удаления текстовых заметок
+  function handleDeleteTextNote(noteId) {
+    textDispatch({
+      type: "delete",
+      noteId: noteId
+    });
   }
 
   return (
     <>
       <Header />
-      <TodoListPage />
-      <AddTodoPage />
-      <Gallery>
-        <Title text="Текстовые заметки" level={2} color="green" />
-        {textGalleryItems}
-      </Gallery >
-      <Gallery>
-        <Title text="Картинки" level={2} color="orange" />
-        {imageGalleryItems}
-      </Gallery>
-      <Button onClickButton={handleAddTextNote}
-      text="Добавить текст в галерею" />
-           <Button onClickButton={handleAddImageNote}
-      text="Добавить изображение в галерею" />
+      <Outlet />
       <Footer />
     </>
   )
