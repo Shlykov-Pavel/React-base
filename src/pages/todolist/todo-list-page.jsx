@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Button from "../../components/button/button";
 import Title from "../../components/text/Title";
 import Todos from "../../components/todo/Todos";
-import { getTodos } from "../../todo-api/todoapi";
+import { useLoaderData } from "react-router-dom";
 
 function getFilters() {
     return [
@@ -13,29 +13,16 @@ function getFilters() {
     ]
 }
 
-// Хук useEffect
-// Используется, если нужно описать побочные эффекты,
-// которые не происходят в зависимости от событий:
-// извлечение данных из localstorage, запросы на сервер,
-// подписка на события без участия react (обратчик события на window),
-// изменения заголовка вкладки
 
 export default function TodoListPage() {
 
     const [pageTitle, setPageTitle] = useState("Все задачи");
-    const [todos, setTodos] = useState([]);
+    const [todosState, setTodos] = useState([]);
+    const { todos } = useLoaderData();
 
     useEffect(() => {
-        // здесь могут быть запросы на сервер
-        // извлечение данных из локального хранилища
-        // подписка на события без участия react и т.д.
-
-        setTodos(getTodos());
-
-        // если мы укажем зависимость от данной переменной,
-        // то перерисовки будут зациклены:
-        // вызов сеттера -> новый рендеринг -> useEffect -> вызов сеттера
-    }, []); // зависимости не меняются, поэтому useEffect отработает один раз
+        setTodos(todos);
+    }, [])
 
     const handleFilterButtonClick = (text) => {
         if (text === pageTitle) return;
@@ -43,7 +30,7 @@ export default function TodoListPage() {
 
         switch (text) {
             case "Открытые":
-                setTodos(todos.map(todo => {
+                setTodos(todosState.map(todo => {
                     return {
                         ...todo,
                         enable: !todo.isDone
@@ -51,7 +38,7 @@ export default function TodoListPage() {
                 }));
                 break;
             case "Завершенные":
-                setTodos(todos.map(todo => {
+                setTodos(todosState.map(todo => {
                     return {
                         ...todo,
                         enable: todo.isDone
@@ -59,7 +46,7 @@ export default function TodoListPage() {
                 }));
                 break;
             case "Просроченные":
-                setTodos(todos.map(todo => {
+                setTodos(todosState.map(todo => {
                     return {
                         ...todo,
                         enable: !todo.isDone && new Date(todo.todoBefore) < new Date()
@@ -67,7 +54,7 @@ export default function TodoListPage() {
                 }));
                 break;
             default:
-                setTodos(todos.map(todo => {
+                setTodos(todosState.map(todo => {
                     return {
                         ...todo,
                         enable: true
@@ -87,8 +74,8 @@ export default function TodoListPage() {
         <div>
             {filters}
         </div>
-        {!todos || todos.length === 0 ?
+        {!todosState || todosState.length === 0 ?
             <p>Задачи отсутствуют</p> :
-            <Todos todosData={todos} filter={pageTitle} />}
+            <Todos todosData={todosState} filter={pageTitle} />}
     </section>
 }

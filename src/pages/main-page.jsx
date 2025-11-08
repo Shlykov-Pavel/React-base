@@ -4,12 +4,11 @@ import TextGallaryItem from "../components/container/TextGallaryItem";
 import ImgGallaryItem from "../components/container/ImgGallaryItem";
 import { useState } from "react";
 import { useReducer } from "react";
-import { useEffect } from "react";
 import Button from "../components/button/button";
 import { PageSettings } from "../pageSettings";
 import { useContext } from "react";
 import Todos from "../components/todo/Todos";
-import { getTodos } from "../todo-api/todoapi";
+import { useLoaderData } from "react-router-dom";
 
 function getTextData() {
     return [
@@ -35,11 +34,7 @@ let nextImageId = 4;
 function MainPage() {
     const defaultColor = useContext(PageSettings);
     const [hColor, setHColor] = useState(defaultColor);
-    const [todos, setTodos] = useState([]);
-
-    useEffect(() => {
-        setTodos(getTodos().filter(todo => !todo.isDone));
-    }, []);
+    const { todos } = useLoaderData();
 
     function handleChangeHColor(color) {
         setHColor(color);
